@@ -1,0 +1,12 @@
+.DS_Store
+
+# Python build/cache artifacts
+__pycache__/
+*.pyc
+
+# Project-local temporary/output files
+Python code/__pycache__/
+Python code/demo.txt
+Python code/test.txt
+Python code/pump_render.png
+
