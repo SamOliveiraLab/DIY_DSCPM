@@ -13,7 +13,7 @@ A PyQt5 desktop application for controlling dual syringe pumps via Arduino over 
   <img src="img/pump_render.png" alt="DIY Dual Syringe Pump" width="300">
 </p>
 
-[View on GitHub](https://github.com/SamOliveiraLab/DSCPM_v2){: .btn }
+[View on GitHub](https://github.com/SamOliveiraLab/DIY_DSCPM){: .btn }
 
 ---
 
