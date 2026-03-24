@@ -5,7 +5,7 @@ title: DIY Dual Syringe Pump
 
 # DIY Dual Syringe Pump
 
-**Dual Syringe Continuous Perfusion Module**
+**DIY Dual Syringe Pump Software**
 
 A PyQt5 desktop application for controlling dual syringe pumps via Arduino over USB serial. Supports multiple pump connections, four flow behavior modes, scheduled command sequences, and visual experiment building.
 
