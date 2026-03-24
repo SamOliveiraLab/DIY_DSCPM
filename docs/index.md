@@ -3,14 +3,14 @@ layout: default
 title: DIY Dual Syringe Pump
 ---
 
-# DSCPM v2
+# DIY Dual Syringe Pump
 
 **Dual Syringe Continuous Perfusion Module**
 
 A PyQt5 desktop application for controlling dual syringe pumps via Arduino over USB serial. Supports multiple pump connections, four flow behavior modes, scheduled command sequences, and visual experiment building.
 
 <p align="center">
-  <img src="img/pump_render.png" alt="DSCPM Pump" width="300">
+  <img src="img/pump_render.png" alt="DIY Dual Syringe Pump" width="300">
 </p>
 
 [View on GitHub](https://github.com/SamOliveiraLab/DSCPM_v2){: .btn }
@@ -32,7 +32,7 @@ A PyQt5 desktop application for controlling dual syringe pumps via Arduino over 
 
 ## Overview
 
-DIY DSCPM provides a graphical interface for researchers to control syringe pump hardware without writing code. Key capabilities include:
+The DIY Dual Syringe Pump software provides a graphical interface for researchers to control syringe pump hardware without writing code. Key capabilities include:
 
 - **Multi-pump support** - connect and control up to 10 pumps simultaneously
 - **Four flow modes** - Constant, Pulse, Oscillation, and Pulse of Oscillation
@@ -43,7 +43,7 @@ DIY DSCPM provides a graphical interface for researchers to control syringe pump
 ## Project Structure
 
 ```
-DSCPM_v2/
+DIY-Dual-Syringe-Pump/
 ├── Arduino_code/
 │   └── pump_JS_07222025.ino    # Arduino firmware
 ├── Python code/

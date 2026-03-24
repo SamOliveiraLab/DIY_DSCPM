@@ -1,5 +1,5 @@
-title: DSCPM v2
-description: Dual Syringe Continuous Perfusion Module - GUI for controlling syringe pumps via Arduino
+title: DIY Dual Syringe Pump
+description: DIY Dual Syringe Pump - GUI software for controlling syringe pumps via Arduino
 remote_theme: pages-themes/cayman@v0.2.0
 plugins:
   - jekyll-remote-theme

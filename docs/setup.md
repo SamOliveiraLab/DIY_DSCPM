@@ -14,7 +14,7 @@ title: Setup & Installation
 - Python 3.8+
 - PyQt5
 - pyserial
-- Arduino board with DSCPM firmware loaded
+- Arduino board with the pump firmware loaded
 
 ## Install Dependencies
 
