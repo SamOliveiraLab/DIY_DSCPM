@@ -1,5 +1,10 @@
 .DS_Store
 
+# Build output
+dist/
+build/
+*.spec
+
 # Python build/cache artifacts
 __pycache__/
 *.pyc
