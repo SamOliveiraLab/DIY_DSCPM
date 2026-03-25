@@ -2,6 +2,8 @@
 layout: default
 ---
 
+This platform provides open-source software and hardware for imposing programmable flow rates and behaviors using a DIY syringe pump. It includes a desktop GUI for real-time pump control, Arduino firmware for motor and valve actuation, and four configurable flow modes - Constant, Pulse, Oscillation, and Pulse of Oscillation. Users can build and run scheduled experiments from the GUI and export them as text-based command files.
+
 <p align="center">
   <img src="img/hero_figure.png" alt="Platform Overview - GUI, Pump Hardware, Flow Behaviors" width="900">
 </p>
