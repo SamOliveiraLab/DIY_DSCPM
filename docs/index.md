@@ -1,15 +1,10 @@
 ---
 layout: default
-title: An Open-Source Platform Enabling Continuous, Low-Flow Control for Long-Term Operation in Biotechnology Systems
 ---
-
-# An Open-Source Platform Enabling Continuous, Low-Flow Control for Long-Term Operation in Biotechnology Systems
 
 <p align="center">
   <img src="img/hero_figure.png" alt="Platform Overview - GUI, Pump Hardware, Flow Behaviors" width="900">
 </p>
-
-An open-source software and hardware platform for imposing flow rates and behaviors in a DIY pump mechanism. Includes a GUI front-end, Arduino firmware, and programmable flow behavior modes.
 
 [View on GitHub](https://github.com/SamOliveiraLab/DIY_DSCPM){: .btn }
 
