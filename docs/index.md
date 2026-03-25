@@ -5,11 +5,11 @@ title: DIY Pump Platform
 
 # An Open-Source Platform for Continuous Low-Flow Control
 
-An open-source software and hardware platform for imposing flow rates and behaviors in a DIY pump mechanism. Includes a GUI front-end, Arduino firmware, and programmable flow behavior modes.
-
 <p align="center">
-  <img src="img/platform_overview.png" alt="Platform Overview - GUI, Pump, Flow Behaviors" width="650">
+  <img src="img/hero_figure.png" alt="Platform Overview - GUI, Pump Hardware, Flow Behaviors" width="900">
 </p>
+
+An open-source software and hardware platform for imposing flow rates and behaviors in a DIY pump mechanism. Includes a GUI front-end, Arduino firmware, and programmable flow behavior modes.
 
 [View on GitHub](https://github.com/SamOliveiraLab/DIY_DSCPM){: .btn }
 
@@ -28,30 +28,14 @@ An open-source software and hardware platform for imposing flow rates and behavi
 
 ---
 
-## Demo Videos
+## Demo
 
-<!-- Replace VIDEO_ID_1 and VIDEO_ID_2 with your actual YouTube video IDs -->
+<!-- Replace VIDEO_ID with your actual YouTube video ID -->
 <p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID_1" frameborder="0" allowfullscreen></iframe>
-</p>
-
-<p align="center">
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID_2" frameborder="0" allowfullscreen></iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/VIDEO_ID" frameborder="0" allowfullscreen></iframe>
 </p>
 
 ---
-
-## The Platform
-
-<p align="center">
-  <img src="img/pump_exploded.png" alt="Pump Hardware - Exploded View" width="500">
-</p>
-
-The platform consists of three core components:
-
-- **GUI (Front-End)** - a desktop application to control flow rates, behaviors, and run scheduled experiments
-- **DIY Pump Hardware** - a 3D-printed syringe pump driven by servo motors and solenoid valves
-- **Flow Behaviors** - four programmable modes: Constant, Pulse, Oscillation, and Pulse of Oscillation
 
 ## Project Structure
 
