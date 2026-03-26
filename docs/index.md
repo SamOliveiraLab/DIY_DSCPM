@@ -14,21 +14,20 @@ This platform provides open-source software and hardware for imposing programmab
 
 ## Demos
 
-<!-- Replace VIDEO_ID_GUI, VIDEO_ID_FIRMWARE, VIDEO_ID_HARDWARE with your actual YouTube video IDs -->
 <table align="center">
   <tr>
     <td align="center">
-      <iframe width="320" height="180" src="https://www.youtube.com/embed/VIDEO_ID_GUI" frameborder="0" allowfullscreen></iframe>
-      <br><b>GUI Demo</b>
-    </td>
-    <td align="center">
-      <iframe width="320" height="180" src="https://www.youtube.com/embed/VIDEO_ID_FIRMWARE" frameborder="0" allowfullscreen></iframe>
-      <br><b>Firmware Demo</b>
-    </td>
-    <td align="center">
-      <iframe width="320" height="180" src="https://www.youtube.com/embed/BdsErtyMBxU" frameborder="0" allowfullscreen></iframe>
+      <iframe width="420" height="236" src="https://www.youtube.com/embed/BdsErtyMBxU" frameborder="0" allowfullscreen></iframe>
       <br><b>Hardware Demo</b>
     </td>
+    <td align="center">
+      <iframe width="420" height="236" src="https://www.youtube.com/embed/6b1y6uDTwsg" frameborder="0" allowfullscreen></iframe>
+      <br><b>GUI Demo</b>
+    </td>
+    <!-- <td align="center">
+      <iframe width="420" height="236" src="https://www.youtube.com/embed/VIDEO_ID_FIRMWARE" frameborder="0" allowfullscreen></iframe>
+      <br><b>Firmware Demo</b>
+    </td> -->
   </tr>
 </table>
 
