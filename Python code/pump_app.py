@@ -33,7 +33,7 @@ class MainWindow(QMainWindow):
         # --- Pump variables ---
         self.connected = False
         self.some_connected = False
-        self.current_flowrate = 0  # uL/min (max 40)
+        self.current_flowrate = 0  # uL/min
         self.arduino_cmds = arduino_cmds.PumpFluidics()
         self.is_on = False
         self.fwd = False
@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         self.flowrate_button_label.setFont(font)
         self.flowrate_button_layout.addWidget(self.flowrate_button_label)
         self.flowrate_edit = QLineEdit()
-        self.flowrate_edit.setPlaceholderText('Enter an int (0 to 40)')
+        self.flowrate_edit.setPlaceholderText('Enter flow rate (uL/min)')
         self.flowrate_edit.returnPressed.connect(lambda: self.update_flowrate(self.flowrate_edit.text()))
         self.flowrate_button_layout.addWidget(self.flowrate_edit)
         self.current_flowrate_label = QLabel(f"Current flowrate: {self.current_flowrate} uL/min")
@@ -175,7 +175,7 @@ class MainWindow(QMainWindow):
         # Flow rate (all modes)
         self.flow_rate_param_label = QLabel("Flow Rate (uL/min):")
         self.flow_rate_param = QLineEdit()
-        self.flow_rate_param.setPlaceholderText('0 - 40')
+        self.flow_rate_param.setPlaceholderText('uL/min')
         self.flow_group_layout.addWidget(self.flow_rate_param_label, 1, 0)
         self.flow_group_layout.addWidget(self.flow_rate_param, 1, 1)
         # Pulse freq
@@ -412,13 +412,13 @@ class MainWindow(QMainWindow):
             self.flowrate_edit.clear()
             return
         try:
-            self.current_flowrate = int(new_flowrate)
-            if 0 <= self.current_flowrate <= 40:
+            self.current_flowrate = float(new_flowrate)
+            if self.current_flowrate > 0:
                 self.current_board.sendcommand(str(self.current_flowrate))
                 self.current_flowrate_label.setText(f"Current flowrate: {self.current_flowrate} uL/min")
                 print(f"Flowrate updated to: {self.current_flowrate}")
             else:
-                raise ValueError("Must be between 0 and 40")
+                raise ValueError("Flow rate must be greater than 0")
         except ValueError:
             print("Invalid flowrate entered. Please enter a number.")
         finally:
@@ -475,8 +475,8 @@ class MainWindow(QMainWindow):
         mode = self.flow_behavior_dropdown.currentText()
         try:
             rate = float(self.flow_rate_param.text())
-            if not (0 <= rate <= 40):
-                raise ValueError("Flow rate must be between 0 and 40")
+            if rate <= 0:
+                raise ValueError("Flow rate must be greater than 0")
 
             if mode == "Constant":
                 cmd = f"FLOWA,{rate}"
@@ -829,12 +829,12 @@ class MainWindow(QMainWindow):
                     pass
         else:
             try:
-                self.current_flowrate = int(command)
-                if 0 <= self.current_flowrate <= 40:
+                self.current_flowrate = float(command)
+                if self.current_flowrate > 0:
                     self.current_flowrate_label.setText(f"Current flowrate: {self.current_flowrate} uL/min")
                     print(f"Flowrate updated to: {self.current_flowrate}")
                 else:
-                    raise ValueError("Must be between 0 and 40")
+                    raise ValueError("Flow rate must be greater than 0")
             except ValueError:
                 print("Invalid flowrate entered. Please enter a number.")
 
@@ -1032,7 +1032,7 @@ class MainWindow(QMainWindow):
             # --- Parameter inputs ---
             self.rate_label = QLabel("Flow Rate (uL/min):")
             self.rate_input = QDoubleSpinBox()
-            self.rate_input.setRange(0, 40)
+            self.rate_input.setRange(0.01, 10000)
             self.rate_input.setDecimals(2)
             input_layout.addWidget(self.rate_label, 2, 0)
             input_layout.addWidget(self.rate_input, 2, 1)
