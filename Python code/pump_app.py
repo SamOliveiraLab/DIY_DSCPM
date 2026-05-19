@@ -8,6 +8,7 @@ from PyQt5.QtGui import QFont, QPixmap
 from PyQt5.QtCore import Qt, QObject, QThread, pyqtSignal
 import arduino_cmds
 import autoport
+import threading
 import time
 
 # Josh Scheel -- joshua@e-scheel.com
@@ -38,6 +39,8 @@ class MainWindow(QMainWindow):
         self.is_on = False
         self.fwd = False
         self.paused = False
+        self._manual_state = None       # last manual running config
+        self._pause_snapshot = None     # config saved when manually paused
 
         # --- Pump selection variables ---
         self.current_serial = ''
@@ -366,6 +369,9 @@ class MainWindow(QMainWindow):
     #####################################################################################################################
 
     def on_off_button_clicked(self):
+        if self.paused and not self.worker_running:
+            self.on_off_button.setChecked(False)
+            return
         if not self.connected or self.current_board is None:
             self.warn_no_connection()
             self.on_off_button.setChecked(False)
@@ -378,6 +384,7 @@ class MainWindow(QMainWindow):
                 self.direction_button.setText('Direction: <--')
             elif self.fwd:
                 self.direction_button.setText('Direction: -->')
+            self._capture_manual_state()
         elif self.is_on:
             self.is_on = False
             self.current_board.sendcommand('0')
@@ -398,10 +405,12 @@ class MainWindow(QMainWindow):
             self.fwd = True
             self.current_board.sendcommand('321')
             self.direction_button.setText('Direction: -->')
+            self._capture_manual_state()
         elif self.fwd:
             self.fwd = False
             self.current_board.sendcommand('321')
             self.direction_button.setText('Direction: <--')
+            self._capture_manual_state()
 
     def update_flowrate(self, new_flowrate):
         if not self.connected or self.current_board is None:
@@ -417,6 +426,7 @@ class MainWindow(QMainWindow):
                 self.current_board.sendcommand(str(self.current_flowrate))
                 self.current_flowrate_label.setText(f"Current flowrate: {self.current_flowrate} uL/min")
                 print(f"Flowrate updated to: {self.current_flowrate}")
+                self._capture_manual_state()
             else:
                 raise ValueError("Flow rate must be greater than 0")
         except ValueError:
@@ -501,6 +511,7 @@ class MainWindow(QMainWindow):
             self.current_flowrate = rate
             self.current_flowrate_label.setText(f"Current flowrate: {self.current_flowrate} uL/min")
             print(f"Flow command sent: {cmd}")
+            self._capture_manual_state(flow_cmd=cmd)
 
         except ValueError as e:
             QMessageBox.warning(self, 'Invalid Input', f'Please enter valid numbers.\n{str(e)}')
@@ -509,63 +520,241 @@ class MainWindow(QMainWindow):
     # Pause / Resume / Restart Functions
     #####################################################################################################################
 
-    def pause_button_clicked(self):
-        """Pause pump and freeze the command scheduler."""
+    def _build_flow_command_from_ui(self):
+        """Build a FLOW* command string from the flow behavior fields, or None if invalid."""
+        try:
+            rate = float(self.flow_rate_param.text())
+            if rate <= 0:
+                return None
+            mode = self.flow_behavior_dropdown.currentText()
+            if mode == "Constant":
+                return f"FLOWA,{rate}"
+            if mode == "Pulse":
+                duty = float(self.duty_cycle_param.text())
+                freq = float(self.pulse_freq_param.text())
+                return f"FLOWB,{rate},{duty},{freq}"
+            if mode == "Oscillation":
+                freq = float(self.osc_freq_param.text())
+                amp = float(self.osc_amp_param.text())
+                return f"FLOWC,{rate},{freq},{amp}"
+            if mode == "Pulse of Oscillation":
+                pfreq = float(self.pulse_freq_param.text())
+                duty = float(self.duty_cycle_param.text())
+                ofreq = float(self.osc_freq_param.text())
+                oamp = float(self.osc_amp_param.text())
+                return f"FLOWD,{rate},{pfreq},{duty},{oamp},{ofreq}"
+        except ValueError:
+            return None
+        return None
+
+    def _capture_manual_state(self, flow_cmd=None):
+        """Remember the current manual pump configuration for pause/resume/restart."""
         if not self.connected or self.current_board is None:
-            self.warn_no_connection()
             return
-        if not self.worker_running or self.worker is None:
-            QMessageBox.warning(self, 'Nothing Running', 'No scheduled commands are running.')
+        cmd = flow_cmd if flow_cmd is not None else self._build_flow_command_from_ui()
+        self._manual_state = {
+            'is_on': self.is_on,
+            'fwd': self.fwd,
+            'flowrate': self.current_flowrate,
+            'flow_mode': self.flow_behavior_dropdown.currentText(),
+            'flow_cmd': cmd,
+        }
+
+    def _restore_manual_state(self, state):
+        """Re-apply a saved manual pump configuration."""
+        if not state or self.current_board is None:
+            return
+        board = self.current_board
+        self.fwd = state['fwd']
+        self.current_flowrate = state['flowrate']
+        self.current_flowrate_label.setText(f"Current flowrate: {self.current_flowrate} uL/min")
+
+        mode = state.get('flow_mode', 'Constant')
+        idx = self.flow_behavior_dropdown.findText(mode)
+        if idx >= 0:
+            self.flow_behavior_dropdown.blockSignals(True)
+            self.flow_behavior_dropdown.setCurrentIndex(idx)
+            self.flow_behavior_dropdown.blockSignals(False)
+            self.update_flow_param_visibility(mode)
+
+        if state['is_on']:
+            board.sendcommand('123')
+            self.is_on = True
+            self.on_off_button.setChecked(True)
+            self.on_off_button.setText('Pump: ON')
+            self.on_off_button.setStyleSheet('background-color: #2eb774; color: white; padding: 5px;')
+            self.direction_button.setText('Direction: -->' if self.fwd else 'Direction: <--')
+            if state.get('flow_cmd'):
+                board.sendcommand(state['flow_cmd'])
+            elif state['flowrate'] > 0:
+                board.sendcommand(str(state['flowrate']))
+        else:
+            board.sendcommand('0')
+            self.is_on = False
+            self.on_off_button.setChecked(False)
+            self.on_off_button.setText('Pump: OFF')
+            self.on_off_button.setStyleSheet('background-color: #bb3f3f; color: white; padding: 5px;')
+            self.direction_button.setText('Direction: OFF')
+
+    def _set_paused_ui(self):
+        self.on_off_button.setText('Pump: PAUSED')
+        self.on_off_button.setStyleSheet('background-color: #e6a817; color: white; padding: 5px;')
+        self.pause_button.setStyleSheet('background-color: #bb3f3f; color: white; padding: 5px;')
+
+    def _clear_paused_ui(self):
+        self.pause_button.setStyleSheet('background-color: #e6a817; color: white; padding: 5px;')
+
+    def _boards_in_remaining_schedule(self):
+        """Unique boards with commands still pending in the active schedule."""
+        if not self.scheduled_commands:
+            return []
+        start_idx = 0
+        if self.worker is not None:
+            try:
+                with self.worker._lock:
+                    start_idx = self.worker._command_index
+            except (AttributeError, RuntimeError):
+                pass
+        seen = set()
+        boards = []
+        for _, _, board in self.scheduled_commands[start_idx:]:
+            key = id(board)
+            if key not in seen:
+                seen.add(key)
+                boards.append(board)
+        return boards
+
+    def _boards_for_original_schedule(self):
+        """Resolve boards referenced by the stored original command list."""
+        seen = set()
+        boards = []
+        unique_boards = list({id(b): b for b in self.connected_boards.values()}.values())
+        for _, _, serial in self.original_commands:
+            if serial in self.connected_boards:
+                board = self.connected_boards[serial]
+            elif len(unique_boards) == 1:
+                board = unique_boards[0]
+            else:
+                continue
+            key = id(board)
+            if key not in seen:
+                seen.add(key)
+                boards.append(board)
+        return boards
+
+    def _stop_worker(self):
+        """Stop the command runner thread safely."""
+        try:
+            running = self.worker and self.thread and self.thread.isRunning()
+        except RuntimeError:
+            running = False
+        if not running:
+            return
+        self.worker.stop()
+        self.thread.quit()
+        self.thread.wait(5000)
+
+    def _send_to_boards(self, command, boards):
+        for board in boards:
+            board.sendcommand(command)
+
+    def pause_button_clicked(self):
+        """Pause pump: freeze a running schedule or stop manual operation."""
+        if not self.connected or not self.connected_boards:
+            self.warn_no_connection()
             return
         if self.paused:
             return
 
-        self.paused = True
-        self.worker.pause()
-        self.current_board.sendcommand('0')
-        self.is_on = False
-        self.on_off_button.setText('Pump: PAUSED')
-        self.on_off_button.setStyleSheet('background-color: #e6a817; color: white; padding: 5px;')
-        self.pause_button.setStyleSheet('background-color: #bb3f3f; color: white; padding: 5px;')
-        print("Paused.")
+        if self.worker_running and self.worker is not None:
+            self.worker.pause()
+            self.paused = True
+            boards = self._boards_in_remaining_schedule()
+            if not boards and self.current_board is not None:
+                boards = [self.current_board]
+            self._send_to_boards('0', boards)
+            if boards:
+                self.current_board = boards[0]
+            self.is_on = False
+            self._set_paused_ui()
+            print("Paused (schedule).")
+            return
+
+        if self.is_on and self.current_board is not None:
+            self._capture_manual_state()
+            self._pause_snapshot = dict(self._manual_state)
+            self.current_board.sendcommand('0')
+            self.paused = True
+            self.is_on = False
+            self._set_paused_ui()
+            print("Paused (manual).")
+            return
+
+        QMessageBox.warning(
+            self, 'Nothing to Pause',
+            'Turn the pump on, or run a schedule (.txt / experiment), then pause.')
 
     def resume_button_clicked(self):
-        """Resume pump and continue the command scheduler."""
-        if not self.connected or self.current_board is None:
+        """Resume pump: continue a schedule or restore manual operation."""
+        if not self.connected or not self.connected_boards:
             self.warn_no_connection()
             return
         if not self.paused:
             return
 
+        if self.worker_running and self.worker is not None:
+            boards = self._boards_in_remaining_schedule()
+            if not boards and self.current_board is not None:
+                boards = [self.current_board]
+            self.worker.resume()
+            self.paused = False
+            self._send_to_boards('123', boards)
+            if boards:
+                self.current_board = boards[0]
+            self.is_on = True
+            self.on_off_button.setText('Pump: ON')
+            self.on_off_button.setStyleSheet('background-color: #2eb774; color: white; padding: 5px;')
+            self._clear_paused_ui()
+            print("Resumed (schedule).")
+            return
+
+        if self._pause_snapshot is not None:
+            self._restore_manual_state(self._pause_snapshot)
+            self.paused = False
+            self._pause_snapshot = None
+            self._clear_paused_ui()
+            print("Resumed (manual).")
+            return
+
         self.paused = False
-        self.current_board.sendcommand('123')
-        self.is_on = True
-        self.worker.resume()
-        self.on_off_button.setText('Pump: ON')
-        self.on_off_button.setStyleSheet('background-color: #2eb774; color: white; padding: 5px;')
-        self.pause_button.setStyleSheet('background-color: #e6a817; color: white; padding: 5px;')
-        print("Resumed.")
+        QMessageBox.warning(self, 'Nothing to Resume', 'Nothing is paused.')
 
     def restart_cycle_button_clicked(self):
-        """Stop current execution and restart the schedule from the beginning."""
-        if not self.connected or self.current_board is None:
+        """Restart a loaded schedule from the beginning (.txt / experiment only)."""
+        if not self.connected or not self.connected_boards:
             self.warn_no_connection()
             return
+
         if not self.original_commands:
-            QMessageBox.warning(self, 'No Commands', 'No commands to restart.')
+            QMessageBox.warning(
+                self, 'No Schedule',
+                'Restart Cycle only applies to a running or loaded schedule.\n'
+                'Run a .txt file or experiment first.')
             return
 
-        # Stop current worker
-        try:
-            if self.worker and self.thread and self.thread.isRunning():
-                self.worker.stop()
-                self.thread.quit()
-                self.thread.wait()
-        except RuntimeError:
-            pass
+        self._restart_schedule()
+
+    def _restart_schedule(self):
+        """Stop current execution and restart the schedule from the beginning."""
+        # Stop pumps and the current worker before rebuilding the schedule
+        self._send_to_boards('0', self._boards_for_original_schedule())
+        self._stop_worker()
 
         self.paused = False
         self.worker_running = False
+        self.is_on = False
+        self.on_off_button.setText('Pump: OFF')
+        self.on_off_button.setStyleSheet('background-color: #bb3f3f; color: white; padding: 5px;')
         self.pause_button.setStyleSheet('background-color: #e6a817; color: white; padding: 5px;')
 
         # Rebuild scheduled commands from original delays
@@ -598,7 +787,7 @@ class MainWindow(QMainWindow):
         self.worker.finished.connect(self.worker.close_worker)
         self.thread.start()
         self.worker_running = True
-        print("Cycle restarted.")
+        print("Cycle restarted (schedule).")
 
     #####################################################################################################################
     # Text File Functions
@@ -766,6 +955,8 @@ class MainWindow(QMainWindow):
             elif not self.worker_running:
                 self.scheduled_commands = new_commands
                 self.original_commands = new_originals
+                self._pause_snapshot = None
+                self.paused = False
 
                 # Start worker
                 self.thread = QThread()
@@ -847,8 +1038,7 @@ class MainWindow(QMainWindow):
         except RuntimeError:
             running = False
         if running:
-            self.worker.stop()
-            self.thread.quit()
+            self._stop_worker()
             self.scheduled_commands = []
             self.original_commands = []
             self.worker_running = False
@@ -889,6 +1079,7 @@ class MainWindow(QMainWindow):
         def __init__(self, scheduled_commands, main_window):
             super().__init__()
             self.scheduled_commands = scheduled_commands
+            self._lock = threading.Lock()
             self._is_running = True
             self._is_paused = False
             self._pause_start = 0
@@ -898,26 +1089,29 @@ class MainWindow(QMainWindow):
         def run(self):
             try:
                 for i in range(len(self.scheduled_commands)):
-                    self._command_index = i
+                    with self._lock:
+                        self._command_index = i
 
-                    while self._is_running:
-                        # If paused, just sleep until unpaused
-                        if self._is_paused:
-                            time.sleep(0.1)
-                            continue
+                    while True:
+                        with self._lock:
+                            if not self._is_running:
+                                break
+                            if self._is_paused:
+                                time.sleep(0.05)
+                                continue
+                            execute_time = self.scheduled_commands[i][0]
 
-                        # Re-read execute_time (may have been shifted by resume)
-                        execute_time = self.scheduled_commands[i][0]
                         wait_time = execute_time - time.monotonic()
                         if wait_time <= 0:
                             break
-                        time.sleep(min(wait_time, 0.1))
+                        time.sleep(min(wait_time, 0.05))
 
-                    if not self._is_running:
-                        break
+                    with self._lock:
+                        if not self._is_running:
+                            break
+                        _, command, board = self.scheduled_commands[i]
 
-                    _, command, board = self.scheduled_commands[i]
-                    self.log.emit(f"{board}*********{command}")
+                    self.log.emit(f"{id(board)}*********{command}")
                     self.main_window.current_board = board
                     self.execute_command(command, board)
 
@@ -928,20 +1122,24 @@ class MainWindow(QMainWindow):
             board.sendcommand(str(command))
 
         def pause(self):
-            self._is_paused = True
-            self._pause_start = time.monotonic()
+            with self._lock:
+                self._is_paused = True
+                self._pause_start = time.monotonic()
 
         def resume(self):
-            if self._is_paused:
+            with self._lock:
+                if not self._is_paused:
+                    return
                 pause_duration = time.monotonic() - self._pause_start
-                # Shift all remaining command times forward
-                for i in range(self._command_index, len(self.scheduled_commands)):
-                    t, cmd, brd = self.scheduled_commands[i]
-                    self.scheduled_commands[i] = (t + pause_duration, cmd, brd)
+                for j in range(self._command_index, len(self.scheduled_commands)):
+                    t, cmd, brd = self.scheduled_commands[j]
+                    self.scheduled_commands[j] = (t + pause_duration, cmd, brd)
                 self._is_paused = False
 
         def stop(self):
-            self._is_running = False
+            with self._lock:
+                self._is_running = False
+                self._is_paused = False
 
         def close_worker(self):
             print('close worker called')
