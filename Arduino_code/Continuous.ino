@@ -1092,35 +1092,41 @@ void setup() {
 char cmdBuffer[64];
 byte cmdIndex = 0;
 
+unsigned long lastSerialCharTime = 0;
+const unsigned long SERIAL_TIMEOUT = 20;
 void loop() {
+
   while (Serial.available() > 0) {
+
     char c = Serial.read();
 
-    if (c == '\r') continue;
+    lastSerialCharTime = millis();
 
-    if (c == '\n') {
-      cmdBuffer[cmdIndex] = '\0';
-
-      Serial.print("[LINE] '");
-      Serial.print(cmdBuffer);
-      Serial.println("'");
-
-      if (cmdIndex > 0) {
-        handleCommand(cmdBuffer);
-      }
-
-      cmdIndex = 0;
-    } else {
-      if (cmdIndex < sizeof(cmdBuffer) - 1) {
-        cmdBuffer[cmdIndex++] = c;
-      }
+    if (c == '\r' || c == '\n') {
+      continue;
     }
+
+    if (cmdIndex < sizeof(cmdBuffer) - 1) {
+      cmdBuffer[cmdIndex++] = c;
+    }
+  }
+
+  if (cmdIndex > 0 && millis() - lastSerialCharTime > SERIAL_TIMEOUT) {
+
+    cmdBuffer[cmdIndex] = '\0';
+
+    Serial.print("[AUTO CMD] ");
+    Serial.println(cmdBuffer);
+
+    handleCommand(cmdBuffer);
+
+    cmdIndex = 0;
   }
 
   if (on == 1 && paused == 0) {
     updateValves();
-    updateMotorOutput();          // refresh pulseIsOn first
-    updateAccumulatedMoveTime();  // then count actual movement time
+    updateMotorOutput();
+    updateAccumulatedMoveTime();
     autoSwitchDirectionIfNeeded();
   } else {
     stopOutputs();
