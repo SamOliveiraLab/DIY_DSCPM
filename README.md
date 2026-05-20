@@ -67,7 +67,7 @@ DSCPM_v2/
 
 ## Setup
 
-1. **Flash the Arduino**: Open `Arduino_code/pump_JS_07222025.ino` in the Arduino IDE and upload it to your board. The firmware uses pins 9 and 11 for servos and pins 5, 6, 10 for solenoid valves. Baud rate is 9600.
+1. **Flash the Arduino**: Open `Arduino_code` in the Arduino IDE and upload it to your board. The firmware uses pins 9 and 11 for servos and pins 5, 6, 10 for solenoid valves. Baud rate is 9600.
 
 2. **Connect hardware**: Plug the Arduino into your computer via USB. Note the serial number or device path if you plan to use manual connection.
 
