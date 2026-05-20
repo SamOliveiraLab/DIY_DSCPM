@@ -34,7 +34,7 @@ A GUI software and hardware platform for imposing flow rates and behaviors in a 
 - Python 3.8+
 - PyQt5
 - pyserial
-- Arduino board with the DSCPM firmware loaded (`pump_JS_07222025.ino`)
+- Arduino board with the DSCPM firmware loaded 
 
 Install Python dependencies (pick one):
 
