@@ -145,7 +145,7 @@ Type a USB serial number (e.g. `054433A493735191B7D8`) or a device path (e.g. `/
 
 ### Quick Flowrate Adjust
 
-Type an integer (0–40) in the flowrate field and press Enter. This sends the number directly to the Arduino, which recalculates the servo delay for that flow rate in uL/min.
+Type an integer in the flowrate field and press Enter. This sends the number directly to the Arduino, which recalculates the servo delay for that flow rate in uL/min.
 
 ---
 
@@ -159,7 +159,7 @@ Steady flow in one direction.
 
 | Parameter | Description |
 |-----------|-------------|
-| Flow Rate (uL/min) | 0–40 |
+| Flow Rate (uL/min) |  |
 
 Command sent: `FLOWA,{rate}`
 
@@ -169,7 +169,7 @@ Intermittent on/off bursts.
 
 | Parameter | Description |
 |-----------|-------------|
-| Flow Rate (uL/min) | 0–40 |
+| Flow Rate (uL/min) |  |
 | Duty Cycle (0–1) | Fraction of each cycle the pump is active |
 | Pulse Freq (Hz) | How many cycles per second |
 
@@ -181,7 +181,7 @@ Back-and-forth flow.
 
 | Parameter | Description |
 |-----------|-------------|
-| Flow Rate (uL/min) | 0–40 |
+| Flow Rate (uL/min) |  |
 | Osc Freq (Hz) | Oscillation frequency |
 | Osc Amplitude | Amplitude of the oscillation |
 
@@ -193,7 +193,7 @@ Pulsed bursts of oscillatory flow - combines both behaviors.
 
 | Parameter | Description |
 |-----------|-------------|
-| Flow Rate (uL/min) | 0–40 |
+| Flow Rate (uL/min) |  |
 | Pulse Freq (Hz) | Frequency of the pulse envelope |
 | Duty Cycle (0–1) | Fraction of each pulse cycle that is active |
 | Osc Amplitude | Amplitude of the oscillation within each pulse |
