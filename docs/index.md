@@ -24,10 +24,10 @@ This platform provides open-source software and hardware for imposing programmab
       <iframe width="420" height="236" src="https://www.youtube.com/embed/6b1y6uDTwsg" frameborder="0" allowfullscreen></iframe>
       <br><b>GUI Demo</b>
     </td>
-    <!-- <td align="center">
-      <iframe width="420" height="236" src="https://www.youtube.com/embed/VIDEO_ID_FIRMWARE" frameborder="0" allowfullscreen></iframe>
-      <br><b>Firmware Demo</b>
-    </td> -->
+    <td align="center">
+      <iframe width="420" height="236" src="https://www.youtube.com/embed/videoseries?list=PLFnID9LrU0V45JprnGNmR9SsOTn1NpvIb" frameborder="0" allowfullscreen></iframe>
+      <br><b><a href="https://www.youtube.com/playlist?list=PLFnID9LrU0V45JprnGNmR9SsOTn1NpvIb">Edge Detection Playlist</a></b>
+    </td>
   </tr>
 </table>
 
