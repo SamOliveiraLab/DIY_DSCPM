@@ -7,7 +7,7 @@ A GUI software and hardware platform for imposing flow rates and behaviors in a 
 [![Hardware Demo](https://img.youtube.com/vi/BdsErtyMBxU/0.jpg)](https://www.youtube.com/watch?v=BdsErtyMBxU)
 [![GUI Demo](https://img.youtube.com/vi/6b1y6uDTwsg/0.jpg)](https://www.youtube.com/watch?v=6b1y6uDTwsg)
 
-Full DSCPM Edge Detection playlist: <https://www.youtube.com/playlist?list=PLFnID9LrU0V45JprnGNmR9SsOTn1NpvIb>
+Full DSCPM Edge Detection playlist: <https://www.youtube.com/playlist?list=PL5P5w8v6POUNH2w5X_0y1NKzEqolb6u0d>
 
 ---
 

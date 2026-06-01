@@ -25,8 +25,8 @@ This platform provides open-source software and hardware for imposing programmab
       <br><b>GUI Demo</b>
     </td>
     <td align="center">
-      <iframe width="420" height="236" src="https://www.youtube.com/embed/videoseries?list=PLFnID9LrU0V45JprnGNmR9SsOTn1NpvIb" frameborder="0" allowfullscreen></iframe>
-      <br><b>Edge Detection Playlist</b>
+      <iframe width="420" height="236" src="https://www.youtube.com/embed/videoseries?list=PL5P5w8v6POUNH2w5X_0y1NKzEqolb6u0d" frameborder="0" allowfullscreen></iframe>
+      <br><b><a href="https://www.youtube.com/playlist?list=PL5P5w8v6POUNH2w5X_0y1NKzEqolb6u0d" style="color: inherit; text-decoration: none;">Edge Detection Playlist</a></b>
     </td>
   </tr>
 </table>
