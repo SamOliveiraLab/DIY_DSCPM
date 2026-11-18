@@ -1,0 +1,3 @@
+window,start_h,end_h,programmed_target_ul_min,estimated_local_plateau_ul_min,dip_detection_threshold_ul_min,measured_mean_including_dips_ul_min,measured_cv_including_dips_pct,measured_mean_excluding_candidate_dips_ul_min,measured_cv_excluding_candidate_dips_pct,fraction_below_threshold,volume_delivered_ul,mean_error_including_dips_pct,mean_error_excluding_dips_pct
+constant_95,0,18,95,94.966343,66.47644009999999,91.68431736040566,16.14639702846333,94.95001755361913,4.815987130582911,0.05518248222702534,99019.78094506223,-3.490192252204571,-0.05261310145354364
+constant_175,24,42,175,174.918726,122.44310819999998,163.6449747183093,21.8660945188402,174.84711680119887,2.9718063776858714,0.09950237421849319,176732.21675330304,-6.488585875251829,-0.08736182788636272

@@ -1,0 +1,9 @@
+boundary_h,from_stage,to_stage,measured_last_5min_median_ul_min,measured_first_5min_median_ul_min,first_5min_min_ul_min,first_5min_max_ul_min,note
+18,constant_95,scheduled_off_1,94.528142,-0.027029499999999998,-0.683322,0.69992,"commanded mode transition, not an automatic syringe-refill event"
+24,scheduled_off_1,constant_175,-0.114521,174.397872,-5.525283,190.461418,"commanded mode transition, not an automatic syringe-refill event"
+42,constant_175,scheduled_off_2,174.322495,-0.026919,-0.737713,0.963729,"commanded mode transition, not an automatic syringe-refill event"
+48,scheduled_off_2,pulsed_120,-0.0569375,119.56238049999999,-3.507305,135.201313,"commanded mode transition, not an automatic syringe-refill event"
+68,pulsed_120,scheduled_off_3,-0.015151,-0.070991,-0.732179,0.967722,"commanded mode transition, not an automatic syringe-refill event"
+72,scheduled_off_3,oscillatory_145,0.0505055,147.51115,-1.599729,164.125388,"commanded mode transition, not an automatic syringe-refill event"
+92,oscillatory_145,scheduled_off_4,141.208863,0.048375,-0.70759,0.94823,"commanded mode transition, not an automatic syringe-refill event"
+96,scheduled_off_4,combined_160,0.028502,161.233176,-5.198383,177.947287,"commanded mode transition, not an automatic syringe-refill event"

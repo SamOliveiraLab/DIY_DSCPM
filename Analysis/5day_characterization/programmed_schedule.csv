@@ -1,0 +1,10 @@
+name,start_h,end_h,behavior,target_ul_min,duty,pulse_frequency_hz,amplitude_ul_min,oscillation_frequency_hz
+constant_95,0,18,constant,95,,,,
+scheduled_off_1,18,24,off,0,,,,
+constant_175,24,42,constant,175,,,,
+scheduled_off_2,42,48,off,0,,,,
+pulsed_120,48,68,pulsed,120,0.5,0.0001388888888888889,,
+scheduled_off_3,68,72,off,0,,,,
+oscillatory_145,72,92,oscillatory,145,,,25,0.0001388888888888889
+scheduled_off_4,92,96,off,0,,,,
+combined_160,96,120,combined,160,0.5,6.944444444444444e-05,15,0.0001388888888888889

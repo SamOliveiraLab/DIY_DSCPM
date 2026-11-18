@@ -1,0 +1,3 @@
+stage,duration_h,programmed_target_ul_min,first_half_hour_median_ul_min,last_half_hour_median_ul_min,linear_drift_ul_min_per_hour,linear_drift_percent_of_target_per_hour,n_half_hour_windows,note
+constant_95,18,95,94.848822,94.876514,-0.002166406563708142,-0.0022804279617980442,36,"observational trend, not statistical replicates"
+constant_175,18,175,174.949955,174.978967,0.0009760108108073202,0.0005577204633184687,36,"observational trend, not statistical replicates"

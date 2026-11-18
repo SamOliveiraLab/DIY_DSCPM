@@ -1,0 +1,74 @@
+FIVE-DAY FLOW CHARACTERIZATION (known nine-stage reference program)
+=================================================================
+Input: 5day_experiment.edf
+Flow column: F_SLF3S_600_2521000056
+Usable flow records: 4,096,238
+Recorded elapsed time: 120.000 h
+Median measurement interval: 0.11218 s (nominal EDF metadata: 0.1 s)
+Median flow over entire recording: 97.627 uL/min
+Flow range: -13.731 to 197.710 uL/min
+Integrated delivered volume: 617,390.2 uL
+Samples below OFF threshold (10.0 uL/min): 35.47%
+
+Constant-flow intervals (from the previously defined nine-stage program):
+  constant_95: 0.0–18.0 h
+    Mean including dips: 91.684 uL/min
+    CV including dips: 16.15%
+    Local plateau: 94.966 uL/min
+    CV excluding candidate dips: 4.82%
+    Error vs programmed target, including dips: -3.49%
+  constant_175: 24.0–42.0 h
+    Mean including dips: 163.645 uL/min
+    CV including dips: 21.87%
+    Local plateau: 174.919 uL/min
+    CV excluding candidate dips: 2.97%
+    Error vs programmed target, including dips: -6.49%
+
+Syringe-switching flow transients (experimenter-identified):
+  constant_95: n=6,919; median depth=88.3%; median below-70% duration=0.528 s; median below-90% duration=0.533 s; median interval=9.362 s; 6.02 events/active min
+  constant_175: n=12,337; median depth=93.7%; median below-70% duration=0.528 s; median below-90% duration=0.536 s; median interval=5.247 s; 10.74 events/active min
+  pulsed_120: n=4,795; median depth=91.1%; median below-70% duration=0.529 s; median below-90% duration=0.539 s; median interval=7.487 s; 7.53 events/active min
+  oscillatory_145: n=11,500; median depth=92.6%; median below-70% duration=0.528 s; median below-90% duration=0.531 s; median interval=6.119 s; 9.01 events/active min
+  combined_160: n=7,556; median depth=93.3%; median below-70% duration=0.528 s; median below-90% duration=0.531 s; median interval=5.672 s; 9.88 events/active min
+  Depth is measured from a stage-specific normal-flow baseline.
+  Fall and recovery durations use 90% of the normal baseline.
+  Intended OFF periods and programmed switching edges are excluded.
+  Brief negative sensor readings are capped at 100% flow reduction.
+
+Within-run cycles of prescribed dynamic behaviors:
+  pulsed_120: n=10 cycles; mean ON flow=114.63 uL/min; cycle-to-cycle CV=0.04%
+  oscillatory_145: n=10 cycles; mean ON flow=137.11 uL/min; cycle-to-cycle CV=0.04%
+  combined_160: n=6 cycles; mean ON flow=150.47 uL/min; cycle-to-cycle CV=0.06%
+
+Drift of constant-flow plateau (short dips excluded):
+  constant_95: slope=-0.0022 uL/min/h (-0.0023% of target/h)
+  constant_175: slope=0.0010 uL/min/h (0.0006% of target/h)
+
+Detected switching-related flow drops in constant-flow windows: 19258
+  Event identity was confirmed by the experimenter, not independently
+  determined from sensor readings or recorded valve-state timestamps.
+
+Output files:
+  programmed_schedule.csv: nine-stage schedule confirmed by experimenter
+  phase_summary.csv: per-command-stage metrics, including exploratory ideal-waveform errors
+  programmed_vs_measured_1min.csv: one-minute mean measurement and ideal profile
+  observed_on_off_blocks.csv: minute-scale flow ON/OFF blocks (not pump commands)
+  constant_window_metrics.csv: steady intervals with and without candidate dips
+  candidate_dropouts.csv: candidate short transients in constant intervals
+  switching_characterization_by_stage.csv: flow-drop statistics for all active modes
+  switching_transient_events.csv: individual flow-drop events in all active modes
+  hourly_statistics.csv: hourly mean, drift context, and waveform error
+  programmed_cycle_statistics.csv: per-cycle ON/OFF characteristics
+  within_run_cycle_repeatability.csv: cycle variation within the SAME run
+  constant_flow_drift.csv: trend in constant-flow plateaus
+  programmed_transitions.csv: 5-minute observations at command boundaries
+
+Analysis caveats:
+  - The nine-stage reference and 50-uL syringe size were confirmed by the experimenter.
+  - CV during programmed pulses/oscillations is not pump precision.
+  - Dynamic-waveform RMSE/MAE assumes zero command latency and phase offset.
+  - Pump-state timestamps are needed for an independent event-by-event
+    confirmation of syringe-switching assignments.
+  - Inter-run reproducibility requires independent experimental replicates.
+  - No matched commercial dual-pump or active-vs-passive valve comparison
+    can be established using this one DIY-pump EDF recording.

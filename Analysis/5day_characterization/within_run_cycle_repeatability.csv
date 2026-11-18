@@ -1,0 +1,4 @@
+stage,behavior,observed_cycles,cycle_on_mean_ul_min,cycle_on_mean_sd_ul_min,cycle_on_mean_cv_pct,cycle_off_mean_ul_min,cycle_off_mean_sd_ul_min,note
+pulsed_120,pulsed,10,114.634796660083,0.04261078116980555,0.0371708961077113,-0.006489642794256137,0.012379620298496085,within-run cycles are not independent run or syringe replicates
+oscillatory_145,oscillatory,10,137.11245311707407,0.058697140215182984,0.04280948876690593,nan,nan,within-run cycles are not independent run or syringe replicates
+combined_160,combined,6,150.46873155633645,0.08676988084593933,0.05766638686221139,0.003979295873173467,0.014696459412087628,within-run cycles are not independent run or syringe replicates
